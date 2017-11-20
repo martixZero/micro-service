@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.micro.service.biz.dao.CityDao">
+    <resultMap id="BaseResultMap" type="com.micro.service.biz.entity.City">
+        <result column="id" property="id" />
+        <result column="province_id" property="provinceId" />
+        <result column="city_name" property="cityName" />
+        <result column="description" property="description" />
+    </resultMap>
+
+    <parameterMap id="City" type="com.micro.service.biz.entity.City"/>
+
+    <sql id="Base_Column_List">
+        id, province_id, city_name, description
+    </sql>
+
+    <select id="findByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from city
+        where city_name = #{cityName}
+    </select>
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List" />
+        from city
+        where id = #{id}
+    </select>
+
+
+    <insert id="insert" parameterType="com.micro.service.biz.entity.City" >
+        INSERT INTO city
+        (
+        <trim suffixOverrides=",">
+            <if test="provinceId != null"> province_id, </if>
+            <if test="cityName != null"> city_name </if>
+
+        </trim>
+        )
+        VALUES
+        (
+        <trim suffixOverrides=",">
+            <if test="provinceId != null"> #{provinceId}, </if>
+            <if test="cityName != null"> #{cityName} </if>
+
+        </trim>
+        )
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-2.0.xsd"
+       default-autowire="byName">
+    <!--指定配置文件-->
+    <util:properties id="jdbcProperties" location="classpath:jdbc.properties"/>
+
+    <bean id="dataSourceMaster" class="com.micro.service.core.spring.MyDruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="#{jdbcProperties['jdbc.master.url']}" />
+        <property name="username" value="#{jdbcProperties['jdbc.master.username']}" />
+        <property name="password" value="#{jdbcProperties['jdbc.master.password']}" />
+        <property name="defaultAutoCommit" value="false" />
+        <property name="driverClassName" value="#{jdbcProperties['jdbc.driver']}" /><!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+        <property name="initialSize" value="3" /><!-- 配置初始化大小、最小、最大 -->
+        <property name="minIdle" value="3" />
+        <property name="maxActive" value="100" />
+        <property name="maxWait" value="60000" /><!-- 配置获取连接等待超时的时间 -->
+        <property name="timeBetweenEvictionRunsMillis" value="600000" /><!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" /><!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="filters" value="stat" />
+    </bean>
+
+    <bean id="dataSourceSlave" class="com.micro.service.core.spring.MyDruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="#{jdbcProperties['jdbc.slave.url']}" />
+        <property name="username" value="#{jdbcProperties['jdbc.slave.username']}" />
+        <property name="password" value="#{jdbcProperties['jdbc.slave.password']}" />
+        <property name="defaultAutoCommit" value="false" />
+        <property name="driverClassName" value="#{jdbcProperties['jdbc.driver']}" /><!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+        <property name="initialSize" value="3" /><!-- 配置初始化大小、最小、最大 -->
+        <property name="minIdle" value="3" />
+        <property name="maxActive" value="100" />
+        <property name="maxWait" value="60000" /><!-- 配置获取连接等待超时的时间 -->
+        <property name="timeBetweenEvictionRunsMillis" value="600000" /><!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" /><!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="filters" value="stat" />
+    </bean>
+
+    <bean id="dataSource" class="com.micro.service.core.datasource.RoutingDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry key="master" value-ref="dataSourceMaster"/>
+                <entry key="salve" value-ref="dataSourceSlave"/>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="dataSourceMaster"/>
+    </bean>
+
+</beans>

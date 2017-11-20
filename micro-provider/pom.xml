@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>micro-service</artifactId>
+		<groupId>com.micro.service</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+
+	<artifactId>micro-provider</artifactId>
+	<packaging>jar</packaging>
+
+	<name>micro-provider</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<!--<dubbo-spring-boot>1.0.0</dubbo-spring-boot>-->
+		<profiles.src>src/main/java</profiles.src>
+		<profiles.resources>src/main/resources</profiles.resources>
+		<profiles.main>src/main</profiles.main>
+		<package.dir>target</package.dir>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.micro.service</groupId>
+			<artifactId>micro-core</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.micro.service</groupId>
+			<artifactId>micro-api</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.micro.service</groupId>
+			<artifactId>micro-biz</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+
+
+		<!-- MySQL 连接驱动依赖 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<!-- druid数据源 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+		</dependency>
+
+		<!--aop-->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+		</dependency>
+
+		<!-- Spring Boot Dubbo 依赖 -->
+
+
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>javax.servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+
+		<!-- MySQL 连接驱动依赖 -->
+
+		<dependency>
+			<groupId>com.101tec</groupId>
+			<artifactId>zkclient</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!--Mybatis分页插件-->
+		<!--<dependency>-->
+		<!--<groupId>com.github.pagehelper</groupId>-->
+		<!--<artifactId>pagehelper</artifactId>-->
+		<!--<version>4.0.0</version>-->
+		<!--</dependency>-->
+		<!--mybatis-plus插件使用-->
+
+		<!-- mybatis-plus begin -->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatisplus-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>micro-provider</finalName>
+
+		<resources>
+
+			<resource>
+				<directory>${profiles.resources}/${profile.resources}</directory>
+			</resource>
+
+			<resource>
+				<directory>src/main/resources/public</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>other/*</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/static</directory>
+				<targetPath>META-INF/resources</targetPath>
+				<includes>
+					<include>**/**</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+
+			</plugin>
+			<!-- profile支持 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<delimiters>
+						<delimiter>@</delimiter>
+					</delimiters>
+					<useDefaultDelimiters>false</useDefaultDelimiters>
+
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<!-- 打包开发机 -->
+		<profile>
+			<id>dev</id>
+			<properties>
+				<profile.resources>dev</profile.resources>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+
+
+		<profile>
+			<id>beta</id>
+			<properties>
+				<profile.resources>beta</profile.resources>
+			</properties>
+		</profile>
+
+		<!-- 打包生产机 -->
+		<profile>
+			<id>prod</id>
+			<properties>
+				<profile.resources>prod</profile.resources>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>test</id>
+			<properties>
+				<profile.resources>test</profile.resources>
+			</properties>
+		</profile>
+	</profiles>
+
+
+</project>
